@@ -16,9 +16,12 @@ def postToCloud(file, id, rpId, txt):
     # txt = the speech to text
     print("Uploading to cloud")
     buckets.uploadFileToAws(file)
-    db.putId(id,rpId,txt)
-    return 
+    db.putId(id,rpId,txt, file)
+    return
 
 def retrieveByRasberryPiId(id):
-    lst = db.getId(id)
+    lst = db.getIdByRp(id)
     return lst
+
+def downloadFile(fileName):
+    buckets.getAudioFileByKey(fileName) 

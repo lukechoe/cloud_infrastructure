@@ -14,6 +14,7 @@ def putId(id, rpId, txt):
             'audioId': id,
             'rpId' : rpId,
             'speechToText' : txt,
+            'fileName' : fileName,
         }
     )
 
@@ -35,10 +36,10 @@ def getIdByRp(id):
     res = []
     try:
         response = audio_table.scan(
-            FilterExpression = Attr('rpId').eq('1')
+            FilterExpression = Attr('rpId').eq(id)
             )
         for i in response['Items']:
-            res.append((i['rpId'], i['audioId'], i['speechToText']))
+            res.append((i['rpId'], i['audioId'], i['speechToText'], i['fileName']))
     except ClientError as e:
         print(e.response['Error']['Message'])
     return res

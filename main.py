@@ -11,7 +11,11 @@ b = s3.Bucket('firstbucketluke')
 
 def uploadFileToAws(file):
     s3.Object('firstbucketluke', file).put(Body='body', Metadata={'typeOfAudio': 'filler'})
+
     
+def getAudioFileByKey(key):
+    s3.download_file('firstbucketluke', key, 'tmp.wav')
+
 """
 for key in b.objects.all():
     k = key.load()
