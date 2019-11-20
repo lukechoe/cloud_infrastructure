@@ -1,6 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key, Attr
+import json
 
 dynamodb = boto3.resource('dynamodb', region_name='ca-central-1')
 audio_table = dynamodb.Table('audio_identifiers')
@@ -8,13 +9,15 @@ text_table = dynamodb.Table('text_version_audio')
 mapping_table = dynamodb.Table('mapping')
 
 #rpId = rasberrypi id {1,2,3,4} for now
-def putId(id, rpId, txt):
+def putId(id, rpId, lst, fileName):
+    fileNameStr = str(fileName)
+    jsonObj = json.dumps(lst)
     audio_table.put_item(
         Item={
             'audioId': id,
             'rpId' : rpId,
-            'speechToText' : txt,
-            'fileName' : fileName,
+            'questionsArray' : jsonObj,
+            'fileName' : fileNameStr,
         }
     )
 
@@ -39,7 +42,7 @@ def getIdByRp(id):
             FilterExpression = Attr('rpId').eq(id)
             )
         for i in response['Items']:
-            res.append((i['rpId'], i['audioId'], i['speechToText'], i['fileName']))
+            res.append((i['audioId'], json.loads(i['questionsArray']), i['fileName'], i['rpId']))
     except ClientError as e:
         print(e.response['Error']['Message'])
     return res

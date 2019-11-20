@@ -9,12 +9,12 @@ def test():
 b = s3.Bucket('firstbucketluke')
 #b.upload_file("1.JPG", "file")
 
-def uploadFileToAws(file):
-    s3.Object('firstbucketluke', file).put(Body='body', Metadata={'typeOfAudio': 'filler'})
+def uploadFileToAws(file, fileNameinS3):
+    #s3.Object('firstbucketluke', file).put(Body='body', Metadata={'typeOfAudio': 'filler'})
+    s3.meta.client.upload_file(file, 'firstbucketluke', 'audios/' + fileNameinS3)
 
-    
-def getAudioFileByKey(key):
-    s3.download_file('firstbucketluke', key, 'tmp.wav')
+def getAudioFileByKey(key, filePath = ""):
+    s3.meta.client.download_file('firstbucketluke', key, filePath + '/' + 'tmp.wav')
 
 """
 for key in b.objects.all():
